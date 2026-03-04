@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Scissors } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
+// Import your logo from the local folder
+import logoImg from './img/Gemini_Generated_Image_d40yuud40yuud40y-removebg-preview.png';
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -10,7 +13,7 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -23,48 +26,55 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-stone-950/95 backdrop-blur-sm py-4 shadow-lg border-b border-white/5' : 'bg-transparent py-6'
+      className={`fixed w-full z-50 transition-all duration-500 ${
+        scrolled 
+          ? 'bg-stone-950/95 backdrop-blur-md py-3 shadow-2xl border-b border-white/5' 
+          : 'bg-transparent py-6'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <a href="#" className="flex items-center gap-2 group">
-
-        <img
-  src="img/Gemini_Generated_Image_d40yuud40yuud40y-removebg-preview.png"  // <- coloque o caminho do seu arquivo de logo aqui
-  alt="Logo da Lord's Barbershop"
-  className="w-12 h-12 object-cover rounded-full border-2 border-[#CE2029]"
-/>
+          
+          {/* Logo Section */}
+          <a href="#" className="flex items-center gap-3 group">
+            <div className="relative">
+              <img
+                src={logoImg}
+                alt="Logo da Lord's Barbershop"
+                className="w-12 h-12 object-cover rounded-full border-2 border-[#CE2029] transition-transform duration-300 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 rounded-full bg-[#CE2029]/20 animate-pulse -z-10"></div>
+            </div>
             
-            <span className="font-serif text-xl md:text-2xl font-bold tracking-wider text-white">
+            <span className="font-serif text-xl md:text-2xl font-bold tracking-tighter text-white">
               LORD'S <span className="text-[#CE2029]">BARBERSHOP</span>
             </span>
           </a>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-10">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-sm uppercase tracking-widest text-stone-300 hover:text-[#CE2029] transition-colors duration-300 font-medium"
+                className="text-xs uppercase tracking-[0.2em] text-stone-300 hover:text-[#CE2029] transition-colors duration-300 font-bold"
               >
                 {link.name}
               </a>
             ))}
             <a
               href="#contactos"
-              className="px-6 py-2 border border-[#CE2029] text-[#CE2029] hover:bg-[#CE2029] hover:text-white transition-all duration-300 text-sm uppercase tracking-widest font-bold"
+              className="px-6 py-2 bg-transparent border-2 border-[#CE2029] text-[#CE2029] hover:bg-[#CE2029] hover:text-white transition-all duration-300 text-xs uppercase tracking-widest font-black"
             >
-              Marcar
+              Marcar Agora
             </a>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-stone-300 hover:text-[#CE2029] transition-colors"
+            className="md:hidden text-stone-100 p-2 hover:bg-white/5 rounded-lg transition-colors"
             onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle Menu"
           >
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
@@ -74,34 +84,4 @@ export default function Navbar() {
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 w-full bg-stone-900 border-b border-stone-800 md:hidden"
-          >
-            <div className="flex flex-col px-4 py-6 space-y-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="text-lg font-serif text-stone-300 hover:text-[#CE2029] transition-colors border-b border-stone-800 pb-2"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {link.name}
-                </a>
-              ))}
-              <a
-                href="#contactos"
-                className="mt-4 text-center py-3 bg-[#CE2029] text-white font-bold uppercase tracking-widest"
-                onClick={() => setIsOpen(false)}
-              >
-                Marcar Corte
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
-  );
-}
+          <motion
